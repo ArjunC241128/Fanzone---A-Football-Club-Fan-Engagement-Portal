@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  /* Color tokens — matchday scoreboard identity */
+  --color-canvas: #f6f6f2;      /* chalk-white page background */
+  --color-ink: #10140f;         /* near-black, green-tinted body text */
+  --color-pitch: #0e3b2e;       /* deep pitch green — bands, nav, footer */
+  --color-pitch-light: #1c5c47; /* lighter pitch green — hovers, secondary panels */
+  --color-kit: #c81e3a;         /* kit red — CTAs, live indicators */
+  --color-kit-dark: #a11730;
+  --color-gold: #c99a2e;        /* trophy gold — stats, highlights */
+  --color-line: #ffffff;        /* line white */
+  --color-concrete: #e9e8e1;    /* card / section background */
+
+  --font-display: "Anton", sans-serif;
+  --font-body: "Work Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* Scoreboard digit styling — the signature motif, reused for
+   countdowns, fixture scores, and stat blocks throughout the site */
+.scoreboard-digits {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
