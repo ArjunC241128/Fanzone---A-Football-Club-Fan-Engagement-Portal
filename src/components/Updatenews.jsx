@@ -13,7 +13,7 @@ const UpdateNews = () => {
         const content = e.target.content.value
         const updatedNews = { title, category, image, content }
 
-        fetch(`http://localhost:3000/news/${_id}`, {
+        fetch(`https://fanzone-backend-anfn.onrender.com/news/${_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
