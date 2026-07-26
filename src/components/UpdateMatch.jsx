@@ -15,7 +15,7 @@ const UpdateMatch = () => {
         const isLive = e.target.isLive.checked
         const updatedMatch = { opponent, venue, competition, date, score, isLive }
 
-        fetch(`http://localhost:3000/matches/${_id}`, {
+        fetch(`https://fanzone-backend-anfn.onrender.com/matches/${_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
