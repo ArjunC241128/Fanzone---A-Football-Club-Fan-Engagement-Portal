@@ -166,7 +166,8 @@ async function run() {
         // ---------------- NEWS ----------------
         app.post('/news', async (req, res) => {
             const data = req.body;
-            const result = await newsCollection.insertOne(data);
+            // New posts start with zero views so "Most Popular" sorting has a value to read.
+            const result = await newsCollection.insertOne({ views: 0, ...data });
             res.send(result)
         })
 
@@ -206,6 +207,17 @@ async function run() {
                 },
             };
             const result = await newsCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
+        // Bumps a news post's view count by 1. Called by the fan-facing News page
+        // whenever someone opens a post's full article — this is what "Most Popular"
+        // sorting reads from.
+        app.patch('/news/:id/view', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = { $inc: { views: 1 } };
+            const result = await newsCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
 

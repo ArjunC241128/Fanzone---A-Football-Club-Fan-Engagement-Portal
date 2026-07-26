@@ -5,6 +5,7 @@ import {
   Trash2, Check, EyeOff, Star, ArrowUpCircle, ArrowDownCircle,
   AlertTriangle, ChevronDown
 } from "lucide-react";
+import { useAuth, ADMIN_EMAIL } from "./AuthProvider";
 
 const API = "http://localhost:3000";
 const FONT_LINK_ID = "titans-admin-fonts";
@@ -55,7 +56,7 @@ function useGoogleFonts() {
     link.id = FONT_LINK_ID;
     link.rel = "stylesheet";
     link.href =
-      "https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap";
+      "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap";
     document.head.appendChild(link);
   }, []);
 }
@@ -91,20 +92,20 @@ const IconBtn = ({ onClick, children, danger, label }) => (
 
 const StatBadge = ({ value, label }) => (
   <div>
-    <div className="bg-[#0b0c0a] text-[#e0a52e] font-mono font-bold text-2xl px-4.5 py-3 rounded min-w-[70px] text-center">
+    <div className="bg-[#0b0c0a] text-[#e0a52e] font-['Poppins',sans-serif] font-bold text-xl sm:text-2xl px-3.5 py-2.5 sm:px-4.5 sm:py-3 rounded min-w-[62px] sm:min-w-[70px] text-center">
       {value}
     </div>
-    <div className="font-mono text-[10px] tracking-[0.07em] text-[#4d7e69] uppercase mt-1.5">{label}</div>
+    <div className="font-['Poppins',sans-serif] font-semibold text-[10px] sm:text-[11px] tracking-[0.05em] text-[#4d7e69] uppercase mt-1.5">{label}</div>
   </div>
 );
 
 const SectionHead = ({ eyebrow, title, action }) => (
   <div className="flex items-end justify-between gap-3.5 flex-wrap">
     <div>
-      <span className="font-mono text-[11px] font-bold tracking-[0.12em] text-[#e0a52e]">{eyebrow}</span>
-      <h2 className="font-['Anton',sans-serif] font-normal uppercase text-xl leading-tight mt-1 mb-1 text-[#f4f1e6]">{title}</h2>
+      <span className="font-['Poppins',sans-serif] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] text-[#e0a52e]">{eyebrow}</span>
+      <h2 className="font-['Poppins',sans-serif] font-extrabold uppercase text-xl sm:text-2xl leading-tight mt-1 mb-1 text-[#f4f1e6] tracking-tight">{title}</h2>
     </div>
-    {action}
+    {action && <div className="w-full sm:w-auto">{action}</div>}
   </div>
 );
 
@@ -116,11 +117,11 @@ const Stars = ({ value, size = 14 }) => (
   </div>
 );
 
-const primaryBtn = "inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[13px] font-bold bg-[#d1374c] text-[#f4f1e6] hover:bg-[#b82c40] transition-colors";
-const ghostBtn = "px-3.5 py-2 rounded-md text-[13px] font-bold border border-[#e0a52e]/25 text-[#f4f1e6] hover:bg-[#e0a52e]/10 transition-colors";
-const dangerBtn = "px-3.5 py-2 rounded-md text-[13px] font-bold bg-[#d1374c] text-[#f4f1e6] hover:bg-[#b82c40] transition-colors";
-const inputCls = "bg-[#0e2b21] border border-[#e0a52e]/20 rounded-md px-3 py-2 text-[#f4f1e6] text-[13px] outline-none focus:border-[#e0a52e] focus:ring-2 focus:ring-[#e0a52e]/15 w-full [color-scheme:dark]";
-const linkCls = "bg-transparent border-none text-[#f0c968] text-[12.5px] font-bold inline-flex items-center gap-1 hover:text-[#e0a52e]";
+const primaryBtn = "inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-md text-[13.5px] font-bold bg-[#d1374c] text-[#f4f1e6] hover:bg-[#b82c40] transition-colors w-full sm:w-auto";
+const ghostBtn = "px-3.5 py-2 rounded-md text-[13.5px] font-bold border border-[#e0a52e]/25 text-[#f4f1e6] hover:bg-[#e0a52e]/10 transition-colors";
+const dangerBtn = "px-3.5 py-2 rounded-md text-[13.5px] font-bold bg-[#d1374c] text-[#f4f1e6] hover:bg-[#b82c40] transition-colors";
+const inputCls = "bg-[#0e2b21] border border-[#e0a52e]/20 rounded-md px-3 py-2 text-[#f4f1e6] text-[14px] outline-none focus:border-[#e0a52e] focus:ring-2 focus:ring-[#e0a52e]/15 w-full [color-scheme:dark]";
+const linkCls = "bg-transparent border-none text-[#f0c968] text-[13px] font-bold inline-flex items-center gap-1 hover:text-[#e0a52e]";
 
 function RecordModal({ title, fields, initialData, onSave, onClose }) {
   const [form, setForm] = useState(() => {
@@ -140,19 +141,19 @@ function RecordModal({ title, fields, initialData, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4" onClick={onClose}>
       <div
-        className="w-full max-w-md bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl max-h-[88vh] flex flex-col"
+        className="w-full max-w-md bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl max-h-[92vh] sm:max-h-[88vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4.5 py-4 border-b border-[#e0a52e]/15">
-          <h3 className="font-['Anton',sans-serif] uppercase text-lg text-[#f4f1e6]">{title}</h3>
+        <div className="flex items-center justify-between px-4 py-3.5 sm:px-4.5 sm:py-4 border-b border-[#e0a52e]/15">
+          <h3 className="font-['Poppins',sans-serif] font-extrabold uppercase text-base sm:text-lg text-[#f4f1e6] tracking-tight">{title}</h3>
           <IconBtn label="Close" onClick={onClose}><X size={18} /></IconBtn>
         </div>
-        <div className="px-4.5 py-4 overflow-y-auto">
+        <div className="px-4 py-3.5 sm:px-4.5 sm:py-4 overflow-y-auto">
           {fields.map((f) => (
             <div key={f.key} className={f.type === "checkbox" ? "flex items-center gap-2 mb-3.5" : "flex flex-col gap-1.5 mb-3.5"}>
-              {f.type !== "checkbox" && <label className="text-[11.5px] font-bold text-[#f0c968]">{f.label}</label>}
+              {f.type !== "checkbox" && <label className="text-[12.5px] font-bold text-[#f0c968]">{f.label}</label>}
 
               {f.type === "textarea" && (
                 <textarea className={`${inputCls} resize-y`} rows={3} value={form[f.key]} onChange={(e) => update(f.key, e.target.value)} />
@@ -176,7 +177,7 @@ function RecordModal({ title, fields, initialData, onSave, onClose }) {
                     onChange={(e) => update(f.key, e.target.checked)}
                     className="h-4 w-4 accent-[#e0a52e]"
                   />
-                  <label className="text-[11.5px] font-bold text-[#f0c968]">{f.label}</label>
+                  <label className="text-[12.5px] font-bold text-[#f0c968]">{f.label}</label>
                 </>
               )}
 
@@ -186,7 +187,7 @@ function RecordModal({ title, fields, initialData, onSave, onClose }) {
             </div>
           ))}
         </div>
-        <div className="flex justify-end gap-2.5 px-4.5 py-3.5 border-t border-[#e0a52e]/15">
+        <div className="flex justify-end gap-2.5 px-4 py-3 sm:px-4.5 sm:py-3.5 border-t border-[#e0a52e]/15">
           <button className={ghostBtn} onClick={onClose}>Cancel</button>
           <button className={dangerBtn} disabled={saving} onClick={submit}>
             {saving ? "Saving..." : "Save"}
@@ -205,13 +206,13 @@ function ConfirmDialog({ title, message, confirmLabel = "Confirm", danger, onCon
     setBusy(false);
   };
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onCancel}>
-      <div className="w-full max-w-sm bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl p-5" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4" onClick={onCancel}>
+      <div className="w-full max-w-sm bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl p-4 sm:p-5" onClick={(e) => e.stopPropagation()}>
         <div className="w-[34px] h-[34px] rounded-full bg-[#e0a52e]/15 text-[#e0a52e] flex items-center justify-center mb-2.5">
           <AlertTriangle size={18} />
         </div>
-        <h3 className="font-bold text-[15px] text-[#f4f1e6] mb-1.5">{title}</h3>
-        <p className="text-[13px] text-[#f4f1e6]/75">{message}</p>
+        <h3 className="font-bold text-[15.5px] text-[#f4f1e6] mb-1.5">{title}</h3>
+        <p className="text-[13.5px] text-[#f4f1e6]/75">{message}</p>
         <div className="flex justify-end gap-2.5 mt-5">
           <button className={ghostBtn} onClick={onCancel}>Cancel</button>
           <button className={danger ? dangerBtn : dangerBtn} disabled={busy} onClick={run}>
@@ -244,41 +245,41 @@ function Sidebar({ active, onNavigate, open, onClose }) {
         className={`w-[250px] shrink-0 bg-[#0a2118] border-r border-[#e0a52e]/[0.14] flex flex-col fixed md:sticky top-0 h-screen z-40
           transition-transform duration-200 ease-out
           ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
-          w-[78%] max-w-[270px] md:w-[250px] md:max-w-none shadow-[20px_0_40px_rgba(0,0,0,0.4)] md:shadow-none`}
+          w-[82%] xs:w-[78%] max-w-[270px] md:w-[250px] lg:w-[260px] md:max-w-none shadow-[20px_0_40px_rgba(0,0,0,0.4)] md:shadow-none`}
       >
-        <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[#e0a52e]/[0.14]">
+        <div className="flex items-center gap-2.5 px-4 py-4 sm:py-5 border-b border-[#e0a52e]/[0.14]">
           <div
-            className="w-9 h-10 bg-[#0b0c0a] border-[1.5px] border-[#e0a52e] flex items-center justify-center font-['Anton',sans-serif] text-[#e0a52e] text-[13px] shrink-0"
+            className="w-9 h-10 bg-[#0b0c0a] border-[1.5px] border-[#e0a52e] flex items-center justify-center font-['Poppins',sans-serif] font-extrabold text-[#e0a52e] text-[13px] shrink-0"
             style={{ clipPath: "polygon(50% 0%, 100% 18%, 100% 70%, 50% 100%, 0% 70%, 0% 18%)" }}
           >
             CT
           </div>
           <div className="leading-tight flex-1 min-w-0">
-            <div className="font-['Anton',sans-serif] text-[13px] tracking-wide text-[#f4f1e6]">CHATTOGRAM TITANS</div>
-            <div className="font-mono text-[9px] text-[#e0a52e] tracking-[0.1em]">ADMIN CONSOLE</div>
+            <div className="font-['Poppins',sans-serif] font-bold text-[13px] sm:text-[14px] tracking-wide text-[#f4f1e6] truncate">CHATTOGRAM TITANS</div>
+            <div className="font-['Poppins',sans-serif] font-semibold text-[10px] text-[#e0a52e] tracking-[0.08em]">ADMIN CONSOLE</div>
           </div>
           <button className="md:hidden ml-auto" onClick={onClose} aria-label="Close menu">
             <X size={20} className="text-[#f4f1e6]" />
           </button>
         </div>
-        <nav className="flex flex-col px-2.5 py-3 gap-0.5 flex-1">
+        <nav className="flex flex-col px-2.5 py-3 gap-0.5 flex-1 overflow-y-auto">
           {NAV_ITEMS.map(({ id, label, Icon }) => (
             <button
               key={id}
               onClick={() => onNavigate(id)}
-              className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-md text-[13.5px] font-medium text-left transition-colors ${
+              className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-md text-[13.5px] sm:text-[14px] font-medium text-left transition-colors ${
                 active === id
                   ? "bg-[#e0a52e]/[0.14] text-[#f0c968] shadow-[inset_3px_0_0_#e0a52e]"
                   : "text-[#f4f1e6]/[0.72] hover:bg-[#e0a52e]/[0.08] hover:text-[#f4f1e6]"
               }`}
             >
-              <Icon size={17} strokeWidth={2} />
+              <Icon size={17} strokeWidth={2} className="shrink-0" />
               <span>{label}</span>
             </button>
           ))}
         </nav>
-        <div className="flex items-center gap-1.5 px-4 py-3.5 border-t border-[#e0a52e]/[0.14] font-mono text-[9.5px] tracking-[0.05em] text-[#4d7e69]">
-          <ShieldCheck size={15} />
+        <div className="flex items-center gap-1.5 px-4 py-3.5 border-t border-[#e0a52e]/[0.14] font-['Poppins',sans-serif] font-medium text-[10.5px] tracking-[0.04em] text-[#4d7e69]">
+          <ShieldCheck size={15} className="shrink-0" />
           <span>SINCE 1998 &middot; TITANS ARENA</span>
         </div>
       </aside>
@@ -294,7 +295,7 @@ function OverviewTab({ matches, players, news, bookings, reviews, users }) {
 
   return (
     <div className="flex flex-col gap-5 max-w-[1040px]">
-      <div className="flex gap-7 flex-wrap">
+      <div className="flex gap-4 sm:gap-7 flex-wrap">
         <StatBadge value={String(matches.filter((m) => m.status === "upcoming").length).padStart(2, "0")} label="Upcoming Matches" />
         <StatBadge value={String(players.length).padStart(2, "0")} label="Squad Players" />
         <StatBadge value={String(news.length).padStart(2, "0")} label="News Posts" />
@@ -304,25 +305,25 @@ function OverviewTab({ matches, players, news, bookings, reviews, users }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-5 py-4.5">
-          <span className="font-mono text-[11px] font-bold tracking-[0.12em] text-[#e0a52e]">NEXT FIXTURE</span>
+        <section className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-4 py-4 sm:px-5 sm:py-4.5">
+          <span className="font-['Poppins',sans-serif] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] text-[#e0a52e]">NEXT FIXTURE</span>
           {nextMatch ? (
             <>
-              <h3 className="font-['Anton',sans-serif] uppercase text-xl mt-1 mb-2 text-[#f4f1e6]">
+              <h3 className="font-['Poppins',sans-serif] font-extrabold uppercase text-xl sm:text-2xl mt-1 mb-2 text-[#f4f1e6] tracking-tight break-words">
                 TITANS VS {nextMatch.opponent?.toUpperCase()}
               </h3>
-              <p className="text-[13px] text-[#4d7e69] m-0">{nextMatch.date} &middot; {nextMatch.time} &middot; {nextMatch.venue}</p>
-              <p className="text-[13px] text-[#4d7e69] m-0">{nextMatch.competition}</p>
+              <p className="text-[13.5px] text-[#4d7e69] m-0">{nextMatch.date} &middot; {nextMatch.time} &middot; {nextMatch.venue}</p>
+              <p className="text-[13.5px] text-[#4d7e69] m-0">{nextMatch.competition}</p>
             </>
           ) : (
-            <p className="text-[13px] text-[#4d7e69] mt-2">No upcoming fixtures scheduled.</p>
+            <p className="text-[13.5px] text-[#4d7e69] mt-2">No upcoming fixtures scheduled.</p>
           )}
         </section>
-        <section className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-5 py-4.5">
-          <span className="font-mono text-[11px] font-bold tracking-[0.12em] text-[#e0a52e]">NEEDS YOUR ATTENTION</span>
-          <ul className="list-none m-0 mt-2 p-0 flex flex-col gap-2 text-[13px] text-[#f4f1e6]">
-            {pending > 0 && <li className="flex items-center gap-2"><MessageSquareWarning size={15} /> {pending} review{pending > 1 ? "s" : ""} awaiting moderation</li>}
-            {bookings.length > 0 && <li className="flex items-center gap-2"><CalendarCheck size={15} /> {bookings.length} RSVP{bookings.length > 1 ? "s" : ""} logged for fixtures</li>}
+        <section className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-4 py-4 sm:px-5 sm:py-4.5">
+          <span className="font-['Poppins',sans-serif] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] text-[#e0a52e]">NEEDS YOUR ATTENTION</span>
+          <ul className="list-none m-0 mt-2 p-0 flex flex-col gap-2 text-[13.5px] text-[#f4f1e6]">
+            {pending > 0 && <li className="flex items-center gap-2"><MessageSquareWarning size={15} className="shrink-0" /> {pending} review{pending > 1 ? "s" : ""} awaiting moderation</li>}
+            {bookings.length > 0 && <li className="flex items-center gap-2"><CalendarCheck size={15} className="shrink-0" /> {bookings.length} RSVP{bookings.length > 1 ? "s" : ""} logged for fixtures</li>}
             {pending === 0 && bookings.length === 0 && <li className="text-[#4d7e69]">You're all caught up.</li>}
           </ul>
         </section>
@@ -386,12 +387,12 @@ function MatchesTab({ matches, setMatches }) {
         title="MATCHES"
         action={<button className={primaryBtn} onClick={() => setModal({ mode: "create" })}><Plus size={15} /> New match</button>}
       />
-      <div className="overflow-x-auto bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
-        <table className="w-full border-collapse text-[13px]">
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
+        <table className="w-full min-w-[640px] sm:min-w-0 border-collapse text-[13.5px]">
           <thead>
             <tr>
               {["Fixture", "Competition", "Date", "Venue", "Status", "Score", ""].map((h) => (
-                <th key={h} className="text-left font-mono text-[10.5px] tracking-[0.06em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
+                <th key={h} className="text-left font-['Poppins',sans-serif] font-semibold text-[11px] tracking-[0.04em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
@@ -500,19 +501,19 @@ function PlayersTab({ players, setPlayers }) {
         title="PLAYERS"
         action={<button className={primaryBtn} onClick={() => setModal({ mode: "create" })}><Plus size={15} /> New player</button>}
       />
-      <div className="overflow-x-auto bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
-        <table className="w-full border-collapse text-[13px]">
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
+        <table className="w-full min-w-[560px] sm:min-w-0 border-collapse text-[13.5px]">
           <thead>
             <tr>
               {["#", "Name", "Position", "DOB", "Status", ""].map((h) => (
-                <th key={h} className="text-left font-mono text-[10.5px] tracking-[0.06em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
+                <th key={h} className="text-left font-['Poppins',sans-serif] font-semibold text-[11px] tracking-[0.04em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {players.map((p) => (
               <tr key={p._id}>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] font-mono text-[#e0a52e] whitespace-nowrap">{p.number}</td>
+                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] font-['Poppins',sans-serif] font-bold text-[#e0a52e] whitespace-nowrap">{p.number}</td>
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] font-bold whitespace-nowrap text-[#f4f1e6]">{p.name}</td>
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{p.position}</td>
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{p.dob}</td>
@@ -610,22 +611,22 @@ function NewsTab({ news, setNews }) {
       />
       <div className="flex flex-col gap-3">
         {news.map((n) => (
-          <div key={n._id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-5 py-4.5 flex items-start justify-between gap-4 flex-col sm:flex-row">
+          <div key={n._id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-4 py-4 sm:px-5 sm:py-4.5 flex items-start justify-between gap-4 flex-col sm:flex-row">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                 <Badge tone="gold">{n.tag}</Badge>
-                <span className="text-[12px] text-[#4d7e69]">{n.date}</span>
+                <span className="text-[12.5px] text-[#4d7e69]">{n.date}</span>
               </div>
-              <h4 className="font-bold text-sm text-[#f4f1e6] mb-1">{n.title}</h4>
-              <p className="text-[13px] text-[#4d7e69] m-0">{n.excerpt}</p>
+              <h4 className="font-bold text-[15px] text-[#f4f1e6] mb-1">{n.title}</h4>
+              <p className="text-[13.5px] text-[#4d7e69] m-0">{n.excerpt}</p>
             </div>
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 self-end sm:self-start shrink-0">
               <IconBtn label="Edit" onClick={() => setModal({ mode: "edit", record: n })}><Pencil size={14} /></IconBtn>
               <IconBtn label="Delete" danger onClick={() => setToDelete(n)}><Trash2 size={14} /></IconBtn>
             </div>
           </div>
         ))}
-        {news.length === 0 && <p className="text-[13px] text-[#4d7e69]">No news posts yet.</p>}
+        {news.length === 0 && <p className="text-[13.5px] text-[#4d7e69]">No news posts yet.</p>}
       </div>
 
       {modal && (
@@ -679,11 +680,11 @@ function PollsTab({ polls, setPolls }) {
         {polls.map((p) => {
           const total = p.options.reduce((s, o) => s + o.votes, 0) || 1;
           return (
-            <div key={p.id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-5 py-4.5">
-              <div className="flex items-start justify-between gap-3.5 mb-2.5">
+            <div key={p.id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-4 py-4 sm:px-5 sm:py-4.5">
+              <div className="flex items-start justify-between gap-3.5 mb-2.5 flex-wrap">
                 <div>
                   <Badge tone={p.status === "open" ? "emerald" : "slate"}>{p.status}</Badge>
-                  <h4 className="font-bold text-sm text-[#f4f1e6] mt-1.5 mb-1">{p.question}</h4>
+                  <h4 className="font-bold text-[15px] text-[#f4f1e6] mt-1.5 mb-1">{p.question}</h4>
                 </div>
                 <div className="flex gap-1.5">
                   <IconBtn
@@ -698,7 +699,7 @@ function PollsTab({ polls, setPolls }) {
               <div className="flex flex-col gap-2">
                 {p.options.map((o) => (
                   <div key={o.id}>
-                    <div className="flex justify-between text-[12px] text-[#f4f1e6]/80"><span>{o.label}</span><span>{o.votes} votes</span></div>
+                    <div className="flex justify-between text-[12.5px] text-[#f4f1e6]/80"><span>{o.label}</span><span>{o.votes} votes</span></div>
                     <div className="h-1.5 bg-[#0e2b21] rounded mt-1 overflow-hidden">
                       <div className="h-full bg-[#e0a52e]" style={{ width: `${Math.round((o.votes / total) * 100)}%` }} />
                     </div>
@@ -708,23 +709,23 @@ function PollsTab({ polls, setPolls }) {
             </div>
           );
         })}
-        {polls.length === 0 && <p className="text-[13px] text-[#4d7e69]">No polls yet.</p>}
+        {polls.length === 0 && <p className="text-[13.5px] text-[#4d7e69]">No polls yet.</p>}
       </div>
 
       {creating && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setCreating(false)}>
-          <div className="w-full max-w-md bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl max-h-[88vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-4.5 py-4 border-b border-[#e0a52e]/[0.14]">
-              <h3 className="font-['Anton',sans-serif] uppercase text-lg text-[#f4f1e6]">NEW POLL</h3>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4" onClick={() => setCreating(false)}>
+          <div className="w-full max-w-md bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl max-h-[92vh] sm:max-h-[88vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-4 py-3.5 sm:px-4.5 sm:py-4 border-b border-[#e0a52e]/[0.14]">
+              <h3 className="font-['Poppins',sans-serif] font-extrabold uppercase text-base sm:text-lg text-[#f4f1e6] tracking-tight">NEW POLL</h3>
               <IconBtn label="Close" onClick={() => setCreating(false)}><X size={18} /></IconBtn>
             </div>
-            <div className="px-4.5 py-4 overflow-y-auto">
+            <div className="px-4 py-3.5 sm:px-4.5 sm:py-4 overflow-y-auto">
               <div className="flex flex-col gap-1.5 mb-3.5">
-                <label className="text-[11.5px] font-bold text-[#f0c968]">Question</label>
+                <label className="text-[12.5px] font-bold text-[#f0c968]">Question</label>
                 <input className={inputCls} value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="e.g. Man of the match vs Sylhet Rangers?" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11.5px] font-bold text-[#f0c968]">Options</label>
+                <label className="text-[12.5px] font-bold text-[#f0c968]">Options</label>
                 {options.map((opt, i) => (
                   <div key={i} className="flex gap-2 mb-2">
                     <input className={inputCls} value={opt} onChange={(e) => setOptions((o) => o.map((x, idx) => (idx === i ? e.target.value : x)))} placeholder={`Option ${i + 1}`} />
@@ -736,7 +737,7 @@ function PollsTab({ polls, setPolls }) {
                 <button className={linkCls} onClick={() => setOptions((o) => [...o, ""])}>+ Add option</button>
               </div>
             </div>
-            <div className="flex justify-end gap-2.5 px-4.5 py-3.5 border-t border-[#e0a52e]/[0.14]">
+            <div className="flex justify-end gap-2.5 px-4 py-3 sm:px-4.5 sm:py-3.5 border-t border-[#e0a52e]/[0.14]">
               <button className={ghostBtn} onClick={() => setCreating(false)}>Cancel</button>
               <button className={dangerBtn} onClick={submit}>Publish poll</button>
             </div>
@@ -762,12 +763,12 @@ function BookingsTab({ bookings, loading }) {
   return (
     <div className="flex flex-col gap-5 max-w-[1040px]">
       <SectionHead eyebrow="FAN ACTIVITY" title="BOOKINGS & RSVPs" />
-      <div className="overflow-x-auto bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
-        <table className="w-full border-collapse text-[13px]">
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
+        <table className="w-full min-w-[560px] sm:min-w-0 border-collapse text-[13.5px]">
           <thead>
             <tr>
               {["Fan", "Match", "RSVP", "Ticket type", "Submitted"].map((h) => (
-                <th key={h} className="text-left font-mono text-[10.5px] tracking-[0.06em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
+                <th key={h} className="text-left font-['Poppins',sans-serif] font-semibold text-[11px] tracking-[0.04em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
@@ -786,7 +787,7 @@ function BookingsTab({ bookings, loading }) {
           </tbody>
         </table>
       </div>
-      <p className="text-[12px] text-[#4d7e69] mt-1">
+      <p className="text-[12.5px] text-[#4d7e69] mt-1">
         Every row here comes from a fan's own Fanzone account RSVP-ing on the Bookings &amp; RSVPs tab of their dashboard — nothing here is mock data.
       </p>
     </div>
@@ -834,25 +835,25 @@ function ReviewsTab({ reviews, setReviews, loading }) {
       <SectionHead eyebrow="MODERATION" title="FAN REVIEWS" />
       <div className="flex flex-col gap-3">
         {reviews.map((r) => (
-          <div key={r._id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-5 py-4.5 flex items-start justify-between gap-4 flex-col sm:flex-row">
+          <div key={r._id} className="bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl px-4 py-4 sm:px-5 sm:py-4.5 flex items-start justify-between gap-4 flex-col sm:flex-row">
             <div>
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <Badge tone={statusTone[r.status]}>{r.status}</Badge>
                 <span className="font-bold text-[#f4f1e6]">{r.fanName}</span>
-                <span className="text-[12px] text-[#4d7e69]">&middot; {r.match} &middot; {formatFullDate(r.date)}</span>
+                <span className="text-[12.5px] text-[#4d7e69]">&middot; {r.match} &middot; {formatFullDate(r.date)}</span>
               </div>
               <Stars value={r.rating} />
-              <p className="text-[13px] text-[#f4f1e6]/85 mt-2 leading-relaxed max-w-[60ch]">{r.comment}</p>
+              <p className="text-[13.5px] text-[#f4f1e6]/85 mt-2 leading-relaxed max-w-[60ch]">{r.comment}</p>
             </div>
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 self-end sm:self-start shrink-0">
               {r.status !== "published" && <IconBtn label="Publish" onClick={() => setStatus(r._id, "published")}><Check size={14} /></IconBtn>}
               {r.status !== "hidden" && <IconBtn label="Hide" onClick={() => setStatus(r._id, "hidden")}><EyeOff size={14} /></IconBtn>}
               <IconBtn label="Delete" danger onClick={() => setToDelete(r)}><Trash2 size={14} /></IconBtn>
             </div>
           </div>
         ))}
-        {!loading && reviews.length === 0 && <p className="text-[13px] text-[#4d7e69]">No reviews from registered fans yet.</p>}
-        {loading && <p className="text-[13px] text-[#4d7e69]">Loading reviews...</p>}
+        {!loading && reviews.length === 0 && <p className="text-[13.5px] text-[#4d7e69]">No reviews from registered fans yet.</p>}
+        {loading && <p className="text-[13.5px] text-[#4d7e69]">Loading reviews...</p>}
       </div>
 
       {toDelete && (
@@ -868,9 +869,13 @@ function ReviewsTab({ reviews, setReviews, loading }) {
   );
 }
 
-function UsersTab({ users, setUsers }) {
+// Users & Roles now reads/writes Firestore (via useAuth's fetchAllUsers/setUserRole) instead of
+// the old Mongo /users endpoints, since Firestore is what AuthProvider actually checks on login.
+function UsersTab({ users, setUsers, loading }) {
+  const { setUserRole } = useAuth();
   const [query, setQuery] = useState("");
   const [pending, setPending] = useState(null);
+  const [actionError, setActionError] = useState("");
 
   const filtered = useMemo(
     () => users.filter((u) => u.name?.toLowerCase().includes(query.toLowerCase()) || u.email?.toLowerCase().includes(query.toLowerCase())),
@@ -880,18 +885,15 @@ function UsersTab({ users, setUsers }) {
   const applyRole = async () => {
     const { user, nextRole } = pending;
     setPending(null);
+    setActionError("");
     try {
-      const res = await fetch(`${API}/users/${user._id}/role`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: nextRole }),
-      });
-      const data = await res.json();
+      const data = await setUserRole(user._id, nextRole);
       if (data.modifiedCount) {
         setUsers((list) => list.map((u) => (u._id === user._id ? { ...u, role: nextRole } : u)));
       }
     } catch (err) {
       console.error("Failed to update user role:", err);
+      setActionError("Couldn't update that user's role. Please try again.");
     }
   };
 
@@ -902,44 +904,55 @@ function UsersTab({ users, setUsers }) {
         title="USERS & ROLES"
         action={
           <input
-            className={`${inputCls} max-w-[240px]`}
+            className={`${inputCls} w-full sm:max-w-[240px]`}
             placeholder="Search by name or email..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         }
       />
-      <div className="overflow-x-auto bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
-        <table className="w-full border-collapse text-[13px]">
+
+      {actionError && <p className="text-[#f4a3af] text-[13px] -mt-2">{actionError}</p>}
+
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
+        <table className="w-full min-w-[560px] sm:min-w-0 border-collapse text-[13.5px]">
           <thead>
             <tr>
               {["Name", "Email", "Role", "Joined", ""].map((h) => (
-                <th key={h} className="text-left font-mono text-[10.5px] tracking-[0.06em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
+                <th key={h} className="text-left font-['Poppins',sans-serif] font-semibold text-[11px] tracking-[0.04em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filtered.map((u) => (
-              <tr key={u._id}>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] font-bold whitespace-nowrap text-[#f4f1e6]">{u.name}</td>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{u.email}</td>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap"><Badge tone={u.role === "admin" ? "gold" : "slate"}>{u.role || "fan"}</Badge></td>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{u.joined}</td>
-                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap">
-                  {u.role === "admin" ? (
-                    <button className={`${linkCls} text-[#f4a3af] hover:text-[#d1374c]`} onClick={() => setPending({ user: u, nextRole: "fan" })}>
-                      <ArrowDownCircle size={14} /> Revoke admin
-                    </button>
-                  ) : (
-                    <button className={linkCls} onClick={() => setPending({ user: u, nextRole: "admin" })}>
-                      <ArrowUpCircle size={14} /> Promote to admin
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
+            {filtered.map((u) => {
+              const isPrimaryAdmin = (u.email || "").trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
+              return (
+                <tr key={u._id}>
+                  <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] font-bold whitespace-nowrap text-[#f4f1e6]">{u.name}</td>
+                  <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{u.email}</td>
+                  <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap"><Badge tone={u.role === "admin" ? "gold" : "slate"}>{u.role || "fan"}</Badge></td>
+                  <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{formatFullDate(u.joined)}</td>
+                  <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap">
+                    {isPrimaryAdmin ? (
+                      <span className="text-[12.5px] text-[#4d7e69] font-['Poppins',sans-serif] font-medium">Primary admin</span>
+                    ) : u.role === "admin" ? (
+                      <button className={`${linkCls} text-[#f4a3af] hover:text-[#d1374c]`} onClick={() => setPending({ user: u, nextRole: "fan" })}>
+                        <ArrowDownCircle size={14} /> Revoke admin
+                      </button>
+                    ) : (
+                      <button className={linkCls} onClick={() => setPending({ user: u, nextRole: "admin" })}>
+                        <ArrowUpCircle size={14} /> Promote to admin
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            {!loading && filtered.length === 0 && (
               <tr><td colSpan={5} className="text-center text-[#4d7e69] py-6">No users match your search.</td></tr>
+            )}
+            {loading && (
+              <tr><td colSpan={5} className="text-center text-[#4d7e69] py-6">Loading users...</td></tr>
             )}
           </tbody>
         </table>
@@ -950,7 +963,7 @@ function UsersTab({ users, setUsers }) {
           title={pending.nextRole === "admin" ? "Promote to admin?" : "Revoke admin access?"}
           message={
             pending.nextRole === "admin"
-              ? `${pending.user.name} will gain full access to this admin dashboard, including matches, players, and user roles.`
+              ? `${pending.user.name} will gain full access to this admin dashboard, including matches, players, and user roles. They'll get admin access the next time they log in.`
               : `${pending.user.name} will lose admin access and return to a regular fan account.`
           }
           confirmLabel={pending.nextRole === "admin" ? "Promote" : "Revoke"}
@@ -967,6 +980,7 @@ function UsersTab({ users, setUsers }) {
 
 export default function TitansAdminDashboard() {
   useGoogleFonts();
+  const { fetchAllUsers } = useAuth();
 
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -980,56 +994,77 @@ export default function TitansAdminDashboard() {
   const [polls, setPolls] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 
+  // Fetches each resource independently (Promise.allSettled instead of Promise.all) so a
+  // single failing source can't blank out the rest of the dashboard. Users comes from
+  // Firestore (fetchAllUsers) since that's what actually governs login/role — everything
+  // else still comes from the Mongo/Express API.
   useEffect(() => {
     let cancelled = false;
-    Promise.all([
-      fetch(`${API}/matches`).then((r) => r.json()),
-      fetch(`${API}/players`).then((r) => r.json()),
-      fetch(`${API}/news`).then((r) => r.json()),
-      fetch(`${API}/users`).then((r) => r.json()),
-      fetch(`${API}/bookings`).then((r) => r.json()),
-      fetch(`${API}/reviews`).then((r) => r.json()),
-    ])
-      .then(([matchData, playerData, newsData, userData, bookingData, reviewData]) => {
-        if (cancelled) return;
-        setMatches(matchData);
-        setPlayers(playerData);
-        setNews(newsData);
-        setUsers(userData);
-        setBookings(bookingData);
-        setReviews(reviewData);
-      })
-      .catch((err) => console.error("Failed to load Fanzone dashboard data:", err))
-      .finally(() => { if (!cancelled) setDataLoading(false); });
+
+    const mongoEndpoints = [
+      { key: "matches", setter: setMatches },
+      { key: "players", setter: setPlayers },
+      { key: "news", setter: setNews },
+      { key: "bookings", setter: setBookings },
+      { key: "reviews", setter: setReviews },
+    ];
+
+    Promise.allSettled([
+      ...mongoEndpoints.map(({ key }) =>
+        fetch(`${API}/${key}`).then((r) => {
+          if (!r.ok) throw new Error(`${key} responded ${r.status}`);
+          return r.json();
+        })
+      ),
+      fetchAllUsers(),
+    ]).then((results) => {
+      if (cancelled) return;
+      mongoEndpoints.forEach(({ key, setter }, i) => {
+        const result = results[i];
+        if (result.status === "fulfilled") {
+          setter(result.value);
+        } else {
+          console.error(`Failed to load ${key}:`, result.reason);
+        }
+      });
+      const usersResult = results[mongoEndpoints.length];
+      if (usersResult.status === "fulfilled") {
+        setUsers(usersResult.value);
+      } else {
+        console.error("Failed to load users:", usersResult.reason);
+      }
+      setDataLoading(false);
+    });
+
     return () => { cancelled = true; };
-  }, []);
+  }, [fetchAllUsers]);
 
   const navigate = (id) => { setActiveTab(id); setSidebarOpen(false); };
   const tabLabel = NAV_ITEMS.find((n) => n.id === activeTab)?.label ?? "";
 
   return (
-    <div className="min-h-screen flex bg-[#0e2b21] text-[#f4f1e6] font-['Inter',sans-serif] relative isolate" style={{ colorScheme: "dark" }}>
+    <div className="min-h-screen flex bg-[#0e2b21] text-[#f4f1e6] font-['Poppins',sans-serif] relative isolate" style={{ colorScheme: "dark" }}>
       <Sidebar active={activeTab} onNavigate={navigate} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 min-w-0 flex flex-col">
         <header className="flex items-center justify-between px-4 sm:px-6.5 py-3.5 sm:py-4 border-b border-[#e0a52e]/[0.12] sticky top-0 z-20 bg-[#0e2b21]">
-          <div className="flex items-center gap-3">
-            <button className="md:hidden w-[30px] h-[30px] flex items-center justify-center rounded-md border border-[#e0a52e]/25 text-[#f4f1e6]" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+          <div className="flex items-center gap-3 min-w-0">
+            <button className="md:hidden w-[30px] h-[30px] flex items-center justify-center rounded-md border border-[#e0a52e]/25 text-[#f4f1e6] shrink-0" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
               <Menu size={17} />
             </button>
-            <div>
-              <div className="font-mono text-[11px] font-bold tracking-[0.12em] text-[#e0a52e]">{tabLabel.toUpperCase()}</div>
-              <div className="font-['Anton',sans-serif] uppercase text-xl leading-tight text-[#f4f1e6]">ADMIN DASHBOARD</div>
+            <div className="min-w-0">
+              <div className="font-['Poppins',sans-serif] text-[11px] sm:text-[12px] font-bold tracking-[0.08em] text-[#e0a52e]">{tabLabel.toUpperCase()}</div>
+              <div className="font-['Poppins',sans-serif] font-extrabold uppercase text-lg sm:text-2xl leading-tight text-[#f4f1e6] tracking-tight truncate">ADMIN DASHBOARD</div>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#0b0c0a] text-[#e0a52e] font-mono text-[11px] font-bold tracking-[0.06em] px-2.5 py-1.5 rounded-md border border-[#e0a52e]/35">
-            <ShieldCheck size={13} /> ADMIN
+          <div className="flex items-center gap-1.5 bg-[#0b0c0a] text-[#e0a52e] font-['Poppins',sans-serif] font-bold text-[10.5px] sm:text-[11.5px] tracking-[0.04em] px-2 py-1.5 sm:px-2.5 rounded-md border border-[#e0a52e]/35 shrink-0">
+            <ShieldCheck size={13} /> <span className="hidden xs:inline">ADMIN</span>
           </div>
         </header>
 
         <main className="px-4 sm:px-6.5 pt-5 sm:pt-6 pb-14 flex-1">
           {dataLoading && activeTab !== "polls" && (
-            <p className="text-[13px] text-[#4d7e69] mb-4">Loading dashboard data...</p>
+            <p className="text-[13.5px] text-[#4d7e69] mb-4">Loading dashboard data...</p>
           )}
           {activeTab === "overview" && <OverviewTab matches={matches} players={players} news={news} bookings={bookings} reviews={reviews} users={users} />}
           {activeTab === "matches" && <MatchesTab matches={matches} setMatches={setMatches} />}
@@ -1038,7 +1073,7 @@ export default function TitansAdminDashboard() {
           {activeTab === "polls" && <PollsTab polls={polls} setPolls={setPolls} />}
           {activeTab === "bookings" && <BookingsTab bookings={bookings} loading={dataLoading} />}
           {activeTab === "reviews" && <ReviewsTab reviews={reviews} setReviews={setReviews} loading={dataLoading} />}
-          {activeTab === "users" && <UsersTab users={users} setUsers={setUsers} />}
+          {activeTab === "users" && <UsersTab users={users} setUsers={setUsers} loading={dataLoading} />}
         </main>
       </div>
     </div>

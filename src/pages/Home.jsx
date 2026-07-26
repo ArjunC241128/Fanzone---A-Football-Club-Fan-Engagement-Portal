@@ -44,33 +44,33 @@ export default function Home() {
               "repeating-linear-gradient(90deg, var(--color-line) 0, var(--color-line) 1px, transparent 1px, transparent 64px)",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-8 py-16 sm:py-24 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 sm:gap-12 items-center">
           <div>
-            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-(--color-gold) mb-4">
+            <span className="inline-block text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-(--color-gold) mb-3 sm:mb-4">
               Bangladesh Premier League · Est. 1998
             </span>
-            <h1 className="font-(family-name:--font-display) text-(--color-line) text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-wide">
+            <h1 className="font-(family-name:--font-display) text-(--color-line) text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.98] sm:leading-[0.95] tracking-wide">
               ONE CITY.
               <br />
               ONE ROAR.
               <br />
               <span className="text-(--color-gold)">CHATTOGRAM TITANS.</span>
             </h1>
-            <p className="mt-6 text-(--color-line)/70 max-w-md leading-relaxed">
+            <p className="mt-5 sm:mt-6 text-sm sm:text-base text-(--color-line)/70 max-w-md leading-relaxed">
               Follow every fixture, back the badge, and be part of the matchday from
               anywhere — live updates, ticket booking, and the loudest fan community
               on the coast.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-7 sm:mt-8 flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4">
               <a
                 href="/register"
-                className="rounded-sm bg-(--color-kit) hover:bg-(--color-kit-dark) px-6 py-3 text-sm font-semibold uppercase tracking-wide text-(--color-line) transition-colors"
+                className="rounded-sm bg-(--color-kit) hover:bg-(--color-kit-dark) px-6 py-3 text-sm font-semibold uppercase tracking-wide text-(--color-line) transition-colors text-center"
               >
                 Join FanZone
               </a>
               <a
                 href="/fixtures"
-                className="rounded-sm border border-(--color-line)/30 hover:border-(--color-gold) px-6 py-3 text-sm font-semibold uppercase tracking-wide text-(--color-line) transition-colors"
+                className="rounded-sm border border-(--color-line)/30 hover:border-(--color-gold) px-6 py-3 text-sm font-semibold uppercase tracking-wide text-(--color-line) transition-colors text-center"
               >
                 See fixtures
               </a>
@@ -88,16 +88,16 @@ export default function Home() {
       </section>
 
       {/* Upcoming fixtures strip */}
-      <section className="mx-auto max-w-7xl px-5 sm:px-8 py-16">
-        <div className="flex items-end justify-between mb-6">
-          <h2 className="font-(family-name:--font-display) text-2xl sm:text-3xl text-(--color-pitch)">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-12 sm:py-14 md:py-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 sm:gap-0 mb-5 sm:mb-6">
+          <h2 className="font-(family-name:--font-display) text-xl sm:text-2xl md:text-3xl text-(--color-pitch)">
             Upcoming fixtures
           </h2>
           <a href="/fixtures" className="text-sm font-semibold text-(--color-kit) hover:text-(--color-kit-dark) transition-colors">
             Full schedule →
           </a>
         </div>
-        <div className="flex gap-4 overflow-x-auto snap-x pb-2 -mx-1 px-1">
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto snap-x pb-2 -mx-1 px-1">
           {fixtures.map((f, i) => (
             <FixtureCard key={i} {...f} />
           ))}
@@ -106,16 +106,16 @@ export default function Home() {
 
       {/* Latest news */}
       <section className="bg-(--color-concrete)">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 py-16">
-          <div className="flex items-end justify-between mb-6">
-            <h2 className="font-(family-name:--font-display) text-2xl sm:text-3xl text-(--color-pitch)">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-12 sm:py-14 md:py-16">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 sm:gap-0 mb-5 sm:mb-6">
+            <h2 className="font-(family-name:--font-display) text-xl sm:text-2xl md:text-3xl text-(--color-pitch)">
               Latest news
             </h2>
             <a href="/news" className="text-sm font-semibold text-(--color-kit) hover:text-(--color-kit-dark) transition-colors">
               All news →
             </a>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {news.map((n, i) => (
               <NewsCard key={i} {...n} />
             ))}
@@ -124,16 +124,16 @@ export default function Home() {
       </section>
 
       {/* Featured fan poll */}
-      <section className="mx-auto max-w-7xl px-5 sm:px-8 py-16">
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 items-center">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-12 sm:py-14 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 sm:gap-10 items-center">
           <div>
             <span className="text-xs font-semibold uppercase tracking-widest text-(--color-kit)">
               Have your say
             </span>
-            <h2 className="font-(family-name:--font-display) text-2xl sm:text-3xl text-(--color-pitch) mt-2 mb-4">
+            <h2 className="font-(family-name:--font-display) text-xl sm:text-2xl md:text-3xl text-(--color-pitch) mt-2 mb-3 sm:mb-4">
               Fan polls, every matchday
             </h2>
-            <p className="text-(--color-ink)/70 leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-(--color-ink)/70 leading-relaxed max-w-md">
               From Player of the Month to matchday predictions, FanZone members shape
               the conversation around the club. Sign up to vote, comment, and track
               your fan stats.

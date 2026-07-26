@@ -5,9 +5,9 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Fixtures from "./components/FixtureCard";
+import Fixtures from "./pages/Fixtures";
 import News from "./components/News";
-//import Contact from "./components/Contact";
+import Contact from "./pages/Contact";
 
 import Login from "./components/Login";
 import Registration from "./components/Registration";
@@ -23,28 +23,22 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <div className="min-h-screen flex flex-col">
-
           <Navbar />
 
           <main className="flex-1">
-
             <Routes>
-
               {/* Public Pages */}
-
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/fixtures" element={<Fixtures />} />
               <Route path="/news" element={<News />} />
-              
+              <Route path="/contact" element={<Contact />} />
 
               {/* Authentication */}
-
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Registration />} />
 
               {/* Fan Dashboard */}
-
               <Route
                 path="/dashboard"
                 element={
@@ -55,7 +49,6 @@ export default function App() {
               />
 
               {/* Admin Dashboard */}
-
               <Route
                 path="/admin"
                 element={
@@ -64,13 +57,10 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
-
             </Routes>
-
           </main>
 
           <Footer />
-
         </div>
       </BrowserRouter>
     </AuthProvider>
