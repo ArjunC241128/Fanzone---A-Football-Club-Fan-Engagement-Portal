@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { useAuth, ADMIN_EMAIL } from "./AuthProvider";
 
-const API = "http://localhost:3000";
+const API = "https://fanzone-backend-anfn.onrender.com";
 const FONT_LINK_ID = "titans-admin-fonts";
 
 const MATCH_FIELDS = [
