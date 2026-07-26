@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import NewsCard from "./NewsCard";
 
-const API = "http://localhost:3000";
+const API = "https://fanzone-backend-anfn.onrender.com";
 
 const SORT_OPTIONS = [
   { key: "recent", label: "Most Recent" },
