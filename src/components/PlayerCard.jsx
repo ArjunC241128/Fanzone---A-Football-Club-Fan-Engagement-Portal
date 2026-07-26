@@ -5,7 +5,7 @@ const PlayerCard = ({ player, players, setPlayers }) => {
     const { _id, name, position, jerseyNumber, image, stats } = player;
 
     const handleDeletePlayer = (id) => {
-        fetch(`http://localhost:3000/players/${_id}`, {
+        fetch(`https://fanzone-backend-anfn.onrender.com/players/${_id}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
