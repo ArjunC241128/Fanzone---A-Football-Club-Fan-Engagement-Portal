@@ -2,7 +2,7 @@
 // Talks to the Express/MongoDB backend (server.js) for fan bookings and reviews,
 // so anything a fan submits here shows up in TitansAdminDashboard's Bookings & Reviews tabs.
 
-const API = "http://localhost:3000";
+const API = "https://fanzone-backend-anfn.onrender.com";
 
 /**
  * Create or update a fan's RSVP for a match.
