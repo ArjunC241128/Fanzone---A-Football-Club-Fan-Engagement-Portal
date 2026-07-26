@@ -14,7 +14,7 @@ const UpdatePlayer = () => {
         const stats = e.target.stats.value
         const updatedPlayer = { name, position, jerseyNumber, image, stats }
 
-        fetch(`http://localhost:3000/players/${_id}`, {
+        fetch(`https://fanzone-backend-anfn.onrender.com/players/${_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
