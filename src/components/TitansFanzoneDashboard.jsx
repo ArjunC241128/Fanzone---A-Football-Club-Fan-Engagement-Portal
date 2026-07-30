@@ -13,12 +13,6 @@ import {
 import { useAuth } from "./AuthProvider";
 import { setFanBooking, fetchFanBookings, createFanReview, fetchFanReviews, deleteFanReview } from "./fanzoneData";
 
-/* ---------- Color reference (Tailwind arbitrary values used throughout) ----------
-   pine-950 #0a2118   pine-900 #0e2b21   pine-800 #143a2c   pine-700 #1b4a38
-   pine-600 #235c46   pine-400 #4d7e69   gold-500 #e0a52e   gold-300 #f0c968
-   cream    #f4f1e6   crimson  #d1374c   crimson-600 #b82c40   ink #0b0c0a
-------------------------------------------------------------------------------- */
-
 function getInitials(name, email) {
   if (name && name.trim()) {
     const parts = name.trim().split(/\s+/);
@@ -60,9 +54,6 @@ const SUGGESTED_PROMPTS = [
   "How do I change my RSVP?",
   "What does Fanzone membership include?"
 ];
-
-// NOTE: Titan Bot's system prompt now lives on the backend (Backend/utils/openai.js),
-// since the backend is the one calling the OpenAI API.
 
 function useGoogleFonts() {
   useEffect(() => {
@@ -403,6 +394,11 @@ function FixtureCard({ fixture, onSetRsvp }) {
           <span className="flex items-center gap-1.5"><MapPin size={14} className="shrink-0" /> {fixture.venue}</span>
           <span className="flex items-center gap-1.5"><Ticket size={14} className="shrink-0" /> {fixture.ticketType}</span>
         </div>
+        {fixture.rsvp === "going" && fixture.confirmed && (
+          <span className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-1 rounded-full text-[11.5px] font-bold bg-[#37b872]/15 text-[#7fe0ab]">
+            <Check size={12} strokeWidth={2.5} /> Confirmed by the club
+          </span>
+        )}
       </div>
       <div className="w-px self-stretch border-l-2 border-dashed border-[#e0a52e]/25 max-[540px]:hidden" aria-hidden="true" />
       <div className="flex gap-2 flex-wrap w-full sm:w-auto">
@@ -457,8 +453,6 @@ function BookingsTab({ fixtures, setFixtures }) {
     }
   };
 
-  // Matches by opponent name or fixture date, case-insensitive. Covers both the
-  // upcoming fixtures list and the match history list below it.
   const normalizedQuery = query.trim().toLowerCase();
   const matchesQuery = (item) =>
     !normalizedQuery ||
@@ -643,7 +637,6 @@ function ReviewsTab({ reviews, setReviews, fixtures }) {
   );
 }
 
-// ---------- Titan Bot chat tab: talks to the Express/Mongoose backend ----------
 function ChatTab() {
   const [threadID] = useState(() => uuidv4());
 
@@ -808,7 +801,15 @@ export default function TitansFanzoneDashboard() {
         setFixtures((list) =>
           list.map((f) => {
             const booking = bookings.find((b) => b.matchId === f.id);
-            return booking ? { ...f, rsvp: booking.status, ticketType: booking.ticketType || f.ticketType } : f;
+            return booking
+              ? {
+                  ...f,
+                  rsvp: booking.status,
+                  ticketType: booking.ticketType || f.ticketType,
+                  confirmed: booking.confirmed || false,
+                  confirmationMessage: booking.confirmationMessage || "",
+                }
+              : f;
           })
         );
       })
