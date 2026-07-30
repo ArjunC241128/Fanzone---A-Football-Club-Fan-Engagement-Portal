@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { useAuth, ADMIN_EMAIL } from "./AuthProvider";
 
-const API = "https://fanzone-backend-anfn.onrender.com";
+const API = "http://localhost:3000";
 const FONT_LINK_ID = "titans-admin-fonts";
 
 const MATCH_FIELDS = [
@@ -42,7 +42,6 @@ const NEWS_FIELDS = [
 let pollUid = 100;
 const nextPollId = () => `poll${pollUid++}`;
 
-// Formats a date-ish value as "22 Jun 2026".
 function formatFullDate(value) {
   if (!value) return "";
   const date = typeof value?.toDate === "function" ? value.toDate() : new Date(value);
@@ -60,8 +59,6 @@ function useGoogleFonts() {
     document.head.appendChild(link);
   }, []);
 }
-
-/* ---------------- Shared UI atoms ---------------- */
 
 const BADGE_TONES = {
   slate: "bg-white/10 text-[#f4f1e6]",
@@ -215,7 +212,7 @@ function ConfirmDialog({ title, message, confirmLabel = "Confirm", danger, onCon
         <p className="text-[13.5px] text-[#f4f1e6]/75">{message}</p>
         <div className="flex justify-end gap-2.5 mt-5">
           <button className={ghostBtn} onClick={onCancel}>Cancel</button>
-          <button className={danger ? dangerBtn : dangerBtn} disabled={busy} onClick={run}>
+          <button className={danger ? dangerBtn : primaryBtn} disabled={busy} onClick={run}>
             {busy ? "Working..." : confirmLabel}
           </button>
         </div>
@@ -224,7 +221,7 @@ function ConfirmDialog({ title, message, confirmLabel = "Confirm", danger, onCon
   );
 }
 
-/* ---------------- Sidebar ---------------- */
+
 
 const NAV_ITEMS = [
   { id: "overview", label: "Overview", Icon: LayoutDashboard },
@@ -286,8 +283,6 @@ function Sidebar({ active, onNavigate, open, onClose }) {
     </>
   );
 }
-
-/* ---------------- Tabs ---------------- */
 
 function OverviewTab({ matches, players, news, bookings, reviews, users }) {
   const nextMatch = matches.find((m) => m.status === "upcoming");
@@ -651,8 +646,6 @@ function NewsTab({ news, setNews }) {
   );
 }
 
-// Polls aren't backed by MongoDB yet (no /polls endpoint in server.js) — this tab stays
-// local/in-session, same as before, so it doesn't break if you haven't wired that collection up.
 function PollsTab({ polls, setPolls }) {
   const [creating, setCreating] = useState(false);
   const [question, setQuestion] = useState("");
@@ -758,16 +751,66 @@ function PollsTab({ polls, setPolls }) {
   );
 }
 
-function BookingsTab({ bookings, loading }) {
+function BookingsTab({ bookings, setBookings, loading }) {
   const statusTone = { going: "emerald", maybe: "gold", no: "crimson" };
+  const [confirming, setConfirming] = useState(null); 
+  const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const openConfirm = (booking) => {
+    setConfirming(booking);
+    setMessage(booking.confirmationMessage || "Your spot is confirmed — see you at Titans Arena!");
+  };
+
+  const sendConfirmation = async () => {
+    const target = confirming;
+    setSaving(true);
+    try {
+      const res = await fetch(`${API}/bookings/${target._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmed: true, confirmationMessage: message.trim() }),
+      });
+      const data = await res.json();
+      if (data.modifiedCount) {
+        setBookings((list) =>
+          list.map((b) => (b._id === target._id ? { ...b, confirmed: true, confirmationMessage: message.trim() } : b))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to send confirmation:", err);
+    } finally {
+      setSaving(false);
+      setConfirming(null);
+    }
+  };
+
+  const revokeConfirmation = async (booking) => {
+    try {
+      const res = await fetch(`${API}/bookings/${booking._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmed: false, confirmationMessage: "" }),
+      });
+      const data = await res.json();
+      if (data.modifiedCount) {
+        setBookings((list) =>
+          list.map((b) => (b._id === booking._id ? { ...b, confirmed: false, confirmationMessage: "" } : b))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to revoke confirmation:", err);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5 max-w-[1040px]">
       <SectionHead eyebrow="FAN ACTIVITY" title="BOOKINGS & RSVPs" />
       <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 bg-[#143a2c] border border-[#e0a52e]/[0.14] rounded-xl">
-        <table className="w-full min-w-[560px] sm:min-w-0 border-collapse text-[13.5px]">
+        <table className="w-full min-w-[680px] sm:min-w-0 border-collapse text-[13.5px]">
           <thead>
             <tr>
-              {["Fan", "Match", "RSVP", "Ticket type", "Submitted"].map((h) => (
+              {["Fan", "Match", "RSVP", "Ticket type", "Submitted", "Confirmation", ""].map((h) => (
                 <th key={h} className="text-left font-['Poppins',sans-serif] font-semibold text-[11px] tracking-[0.04em] text-[#4d7e69] uppercase px-3.5 py-3 border-b border-[#e0a52e]/[0.14] whitespace-nowrap">{h}</th>
               ))}
             </tr>
@@ -780,13 +823,51 @@ function BookingsTab({ bookings, loading }) {
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap"><Badge tone={statusTone[b.status]}>{b.status}</Badge></td>
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{b.ticketType}</td>
                 <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap text-[#f4f1e6]">{formatFullDate(b.submittedAt)}</td>
+                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap">
+                  {b.confirmed ? <Badge tone="emerald">Confirmed</Badge> : <Badge tone="slate">Pending</Badge>}
+                </td>
+                <td className="px-3.5 py-2.5 border-b border-[#e0a52e]/[0.08] whitespace-nowrap">
+                  {b.status === "going" && (
+                    b.confirmed ? (
+                      <button className={linkCls} onClick={() => revokeConfirmation(b)}>Revoke</button>
+                    ) : (
+                      <button className={linkCls} onClick={() => openConfirm(b)}>
+                        <Check size={13} /> Confirm
+                      </button>
+                    )
+                  )}
+                </td>
               </tr>
             ))}
-            {!loading && bookings.length === 0 && <tr><td colSpan={5} className="text-center text-[#4d7e69] py-6">No RSVPs from registered fans yet.</td></tr>}
-            {loading && <tr><td colSpan={5} className="text-center text-[#4d7e69] py-6">Loading bookings...</td></tr>}
+            {!loading && bookings.length === 0 && <tr><td colSpan={7} className="text-center text-[#4d7e69] py-6">No RSVPs from registered fans yet.</td></tr>}
+            {loading && <tr><td colSpan={7} className="text-center text-[#4d7e69] py-6">Loading bookings...</td></tr>}
           </tbody>
         </table>
       </div>
+
+      {confirming && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4" onClick={() => setConfirming(null)}>
+          <div className="w-full max-w-md bg-[#143a2c] border border-[#e0a52e]/25 rounded-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-4 py-3.5 sm:px-4.5 sm:py-4 border-b border-[#e0a52e]/[0.14]">
+              <h3 className="font-['Poppins',sans-serif] font-extrabold uppercase text-base text-[#f4f1e6]">CONFIRM BOOKING</h3>
+              <IconBtn label="Close" onClick={() => setConfirming(null)}><X size={18} /></IconBtn>
+            </div>
+            <div className="px-4 py-3.5 sm:px-4.5 sm:py-4">
+              <p className="text-[13.5px] text-[#f4f1e6]/80 mb-2.5">
+                {confirming.fanName}'s RSVP for {confirming.matchLabel} will show as confirmed on their dashboard.
+              </p>
+              <label className="text-[12.5px] font-bold text-[#f0c968]">Message to fan</label>
+              <textarea className={`${inputCls} resize-y mt-1.5`} rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
+            </div>
+            <div className="flex justify-end gap-2.5 px-4 py-3 sm:px-4.5 sm:py-3.5 border-t border-[#e0a52e]/[0.14]">
+              <button className={ghostBtn} onClick={() => setConfirming(null)}>Cancel</button>
+              <button className={dangerBtn} disabled={saving} onClick={sendConfirmation}>
+                {saving ? "Sending..." : "Send confirmation"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <p className="text-[12.5px] text-[#4d7e69] mt-1">
         Every row here comes from a fan's own Fanzone account RSVP-ing on the Bookings &amp; RSVPs tab of their dashboard — nothing here is mock data.
       </p>
@@ -818,7 +899,7 @@ function ReviewsTab({ reviews, setReviews, loading }) {
   const confirmDelete = async () => {
     const id = toDelete._id;
     const previous = reviews;
-    setReviews((list) => list.filter((r) => r._id !== id)); // optimistic
+    setReviews((list) => list.filter((r) => r._id !== id)); 
     setToDelete(null);
     try {
       const res = await fetch(`${API}/reviews/${id}`, { method: "DELETE" });
@@ -869,8 +950,7 @@ function ReviewsTab({ reviews, setReviews, loading }) {
   );
 }
 
-// Users & Roles now reads/writes Firestore (via useAuth's fetchAllUsers/setUserRole) instead of
-// the old Mongo /users endpoints, since Firestore is what AuthProvider actually checks on login.
+
 function UsersTab({ users, setUsers, loading }) {
   const { setUserRole } = useAuth();
   const [query, setQuery] = useState("");
@@ -976,7 +1056,6 @@ function UsersTab({ users, setUsers, loading }) {
   );
 }
 
-/* ---------------- Root ---------------- */
 
 export default function TitansAdminDashboard() {
   useGoogleFonts();
@@ -994,10 +1073,6 @@ export default function TitansAdminDashboard() {
   const [polls, setPolls] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Fetches each resource independently (Promise.allSettled instead of Promise.all) so a
-  // single failing source can't blank out the rest of the dashboard. Users comes from
-  // Firestore (fetchAllUsers) since that's what actually governs login/role — everything
-  // else still comes from the Mongo/Express API.
   useEffect(() => {
     let cancelled = false;
 
@@ -1071,7 +1146,7 @@ export default function TitansAdminDashboard() {
           {activeTab === "players" && <PlayersTab players={players} setPlayers={setPlayers} />}
           {activeTab === "news" && <NewsTab news={news} setNews={setNews} />}
           {activeTab === "polls" && <PollsTab polls={polls} setPolls={setPolls} />}
-          {activeTab === "bookings" && <BookingsTab bookings={bookings} loading={dataLoading} />}
+          {activeTab === "bookings" && <BookingsTab bookings={bookings} setBookings={setBookings} loading={dataLoading} />}
           {activeTab === "reviews" && <ReviewsTab reviews={reviews} setReviews={setReviews} loading={dataLoading} />}
           {activeTab === "users" && <UsersTab users={users} setUsers={setUsers} loading={dataLoading} />}
         </main>
