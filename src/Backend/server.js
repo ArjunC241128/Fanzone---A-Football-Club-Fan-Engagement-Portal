@@ -10,16 +10,14 @@ import chatRouter from "./routes/chat.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// middleware
+
 app.use(cors());
 app.use(express.json());
 app.use("/api", chatRouter);
 
-// Put your real connection string in a .env file as MONGODB_URI=... (never commit .env)
-// Example: MONGODB_URI=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/?appName=TITANBOT
 const uri = process.env.MONGODB_URI;
 
-// ---------------- Mongoose connection (used by chatRouter / any Mongoose models) ----------------
+
 const connectDB = async () => {
     try {
         await mongoose.connect(uri);
@@ -29,7 +27,7 @@ const connectDB = async () => {
     }
 };
 
-// ---------------- Native MongoDB driver connection (used by the Matches/Players/News CRUD below) ----------------
+
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -52,7 +50,7 @@ async function run() {
         const reviewCollection = titanbotDB.collection("Reviews");
         const userCollection = titanbotDB.collection("Users");
 
-        // ---------------- MATCHES ----------------
+      
         app.post('/matches', async (req, res) => {
             const data = req.body;
             const result = await matchCollection.insertOne(data);
@@ -60,7 +58,9 @@ async function run() {
         })
 
         app.get('/matches', async (req, res) => {
-            const cursor = matchCollection.find();
+            const { status } = req.query;
+            const filter = status ? { status } : {};
+            const cursor = matchCollection.find(filter);
             const allValues = await cursor.toArray();
             res.send(allValues)
         })
@@ -109,7 +109,6 @@ async function run() {
             res.send(result)
         })
 
-        // ---------------- PLAYERS ----------------
         app.post('/players', async (req, res) => {
             const data = req.body;
             const result = await playerCollection.insertOne(data);
@@ -163,10 +162,9 @@ async function run() {
             res.send(result)
         })
 
-        // ---------------- NEWS ----------------
+       
         app.post('/news', async (req, res) => {
             const data = req.body;
-            // New posts start with zero views so "Most Popular" sorting has a value to read.
             const result = await newsCollection.insertOne({ views: 0, ...data });
             res.send(result)
         })
@@ -210,9 +208,6 @@ async function run() {
             res.send(result)
         })
 
-        // Bumps a news post's view count by 1. Called by the fan-facing News page
-        // whenever someone opens a post's full article — this is what "Most Popular"
-        // sorting reads from.
         app.patch('/news/:id/view', async (req, res) => {
             const id = req.params.id
             const filter = { _id: new ObjectId(id) };
@@ -228,7 +223,7 @@ async function run() {
             res.send(result)
         })
 
-        // ---------------- BOOKINGS / RSVPs (fan side, read for admin) ----------------
+      
         app.post('/bookings', async (req, res) => {
             const data = req.body;
             const result = await bookingCollection.insertOne(data);
@@ -241,7 +236,19 @@ async function run() {
             res.send(allValues)
         })
 
-        // ---------------- REVIEWS / FEEDBACK (fan side, read for admin) ----------------
+    app.patch('/bookings/:id', async (req, res) => {
+    const id = req.params.id
+    const filter = { _id: new ObjectId(id) };
+    const updateDoc = {
+        $set: {
+            confirmed: req.body.confirmed,
+            confirmationMessage: req.body.confirmationMessage || "",
+            confirmedAt: new Date(),
+        },
+    };
+    const result = await bookingCollection.updateOne(filter, updateDoc);
+    res.send(result)
+})
         app.post('/reviews', async (req, res) => {
             const data = req.body;
             const result = await reviewCollection.insertOne(data);
@@ -254,7 +261,7 @@ async function run() {
             res.send(allValues)
         })
 
-        // Moderate a review: set status to "pending" | "published" | "hidden"
+       
         app.patch('/reviews/:id', async (req, res) => {
             const id = req.params.id
             const filter = { _id: new ObjectId(id) };
@@ -274,14 +281,14 @@ async function run() {
             res.send(result)
         })
 
-        // ---------------- USERS (role management) ----------------
+       
         app.get('/users', async (req, res) => {
             const cursor = userCollection.find();
             const allValues = await cursor.toArray();
             res.send(allValues)
         })
 
-        // Set a user's role, e.g. { "role": "admin" } to promote or { "role": "fan" } to revoke
+       
         app.patch('/users/:id/role', async (req, res) => {
             const id = req.params.id
             const filter = { _id: new ObjectId(id) };
@@ -296,7 +303,6 @@ async function run() {
 
     }
     finally {
-        // await client.close();
     }
 }
 run().catch(console.dir);
